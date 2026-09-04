@@ -4,9 +4,10 @@ import TopicSelector from "./components/TopicSelector";
 import QuestionAnswer from "./components/QuestionAnswer";
 import FeedbackDisplay from "./components/FeedbackDisplay";
 import HistoryView from "./components/HistoryView";
+import ScoreDashboard from "./components/ScoreDashboard";
 import "./App.css";
 
-// Screens: "topics" | "question" | "feedback" | "history"
+// Screens: "topics" | "question" | "feedback" | "history" | "dashboard"
 
 export default function App() {
   const [screen, setScreen] = useState("topics");
@@ -20,9 +21,12 @@ export default function App() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
 
+  // Shared between History and Dashboard views - both just render the same
+  // completed-session data differently, so one fetch covers both.
   const [history, setHistory] = useState([]);
   const [historyLoading, setHistoryLoading] = useState(false);
   const [historyError, setHistoryError] = useState(null);
+  const [historyLoaded, setHistoryLoaded] = useState(false);
 
   useEffect(() => {
     fetchTopics()
@@ -49,6 +53,7 @@ export default function App() {
       const result = await submitAnswer(session.sessionId, answerText);
       setFeedback(result);
       setScreen("feedback");
+      setHistoryLoaded(false); // force a refetch next time history/dashboard is opened
     } catch (e) {
       setSubmitError(e.message);
     } finally {
@@ -62,14 +67,27 @@ export default function App() {
     setScreen("topics");
   };
 
-  const handleViewHistory = () => {
-    setScreen("history");
+  const loadHistoryIfNeeded = () => {
+    if (historyLoaded) return;
     setHistoryLoading(true);
     setHistoryError(null);
     fetchHistory()
-      .then(setHistory)
+      .then((data) => {
+        setHistory(data);
+        setHistoryLoaded(true);
+      })
       .catch((e) => setHistoryError(e.message))
       .finally(() => setHistoryLoading(false));
+  };
+
+  const handleViewHistory = () => {
+    setScreen("history");
+    loadHistoryIfNeeded();
+  };
+
+  const handleViewDashboard = () => {
+    setScreen("dashboard");
+    loadHistoryIfNeeded();
   };
 
   return (
@@ -79,6 +97,9 @@ export default function App() {
         <nav>
           <button onClick={() => setScreen("topics")} disabled={screen === "topics"}>
             Practice
+          </button>
+          <button onClick={handleViewDashboard} disabled={screen === "dashboard"}>
+            Dashboard
           </button>
           <button onClick={handleViewHistory} disabled={screen === "history"}>
             History
@@ -111,6 +132,10 @@ export default function App() {
 
         {screen === "history" && (
           <HistoryView history={history} loading={historyLoading} error={historyError} />
+        )}
+
+        {screen === "dashboard" && (
+          <ScoreDashboard history={history} loading={historyLoading} error={historyError} />
         )}
       </main>
     </div>
