@@ -87,31 +87,29 @@ export default function App() {
     if (key === "history" || key === "dashboard") loadHistoryIfNeeded();
   };
 
-  // The Q&A screen needs real width for the split-pane layout; every other
-  // screen reads better narrower, like an article column.
   const containerWidth = screen === "question" ? "max-w-6xl" : "max-w-4xl";
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100">
-      <header className="sticky top-0 z-10 border-b border-slate-200 bg-white/80 backdrop-blur">
+    <div className="min-h-screen bg-slate-950">
+      <header className="sticky top-0 z-10 border-b border-slate-800 bg-slate-950/90 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600">
               <Sparkles size={16} className="text-white" />
             </div>
-            <h1 className="text-lg font-bold tracking-tight text-slate-900">
+            <h1 className="text-lg font-bold tracking-tight text-slate-100">
               Interview Practice Partner
             </h1>
           </div>
-          <nav className="flex gap-1 rounded-lg bg-slate-100 p-1">
+          <nav className="flex gap-1 rounded-lg bg-slate-900 p-1">
             {NAV_ITEMS.map((item) => (
               <button
                 key={item.key}
                 onClick={() => goTo(item.key)}
                 className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
                   screen === item.key
-                    ? "bg-white text-slate-900 shadow-sm"
-                    : "text-slate-500 hover:text-slate-800"
+                    ? "bg-slate-800 text-slate-100"
+                    : "text-slate-400 hover:text-slate-200"
                 }`}
               >
                 {item.label}

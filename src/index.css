@@ -8,6 +8,7 @@
 body {
   margin: 0;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: #0f172a;
 }
 
 code, pre, textarea.font-mono {
