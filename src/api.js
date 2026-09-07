@@ -14,9 +14,7 @@ async function handleResponse(res) {
 }
 
 export async function fetchTopics() {
-  const res = await fetch(`${BASE_URL}/topics`, {
-    headers: authHeaders(),
-  });
+  const res = await fetch(`${BASE_URL}/topics`, { headers: authHeaders() });
   return handleResponse(res);
 }
 
@@ -38,8 +36,6 @@ export async function submitAnswer(sessionId, answerText) {
 }
 
 export async function fetchHistory() {
-  const res = await fetch(`${BASE_URL}/sessions/history`, {
-    headers: authHeaders(),
-  });
+  const res = await fetch(`${BASE_URL}/sessions/history`, { headers: authHeaders() });
   return handleResponse(res);
 }
